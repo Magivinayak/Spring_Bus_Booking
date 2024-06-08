@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Seat Booking</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #3e28e3 !important;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: #fff !important;
+        }
+        .seat {
+            background-color: #c3e6cb;
+            border: 1px solid #28a745;
+            color: #333;
+            cursor: pointer;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            width: 90px; /* Set fixed width for seats */
+            height: 50px; /* Set fixed height for seats */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .seat.selected {
+            background-color: #28a745;
+            color: white;
+        }
+        .row.seat-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px; /* Add space between rows */
+        }
+        #seat-map {
+            margin-bottom: 20px;
+        }
+        #total-fare {
+            font-weight: bold;
+            color: #28a745;
+        }
+        #book-btn {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        #book-btn:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .upper-deck-label, .lower-deck-label {
+            font-weight: bold;
+        }
+        .footer {
+            position: fixed;
+            background-color: #3e28e3;
+            color: #fff;
+            padding: 20px 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Voyage Bus</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/adminLogin}">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/about}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/contact}">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+
+<br>
+
+
+<div class="container" th:controller="BusController">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2 class="text-center">Seat Selection</h2>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/bookSeats}" method="post">
+<!--                <div id="seat-map">-->
+<!--                    <p class="upper-deck-label text-center">Upper Deck</p>-->
+<!--                    <div class="row seat-row">-->
+<!--                        <div th:each="seatId: ${#numbers.sequence(1, 10)}"  class="seat" th:id="'seat-' + ${seatId}" th:data-seat-id="${seatId}" th:text="'Seat ' + ${seatId}" onclick="selectSeat(this)"></div>-->
+<!--                    </div>-->
+<!--                    <p class="lower-deck-label text-center">Lower Deck</p>-->
+<!--                    <div class="row seat-row">-->
+<!--                        <div th:each="seatId: ${#numbers.sequence(11, 20)}" class="seat" th:id="'seat-' + ${seatId}" th:data-seat-id="${seatId}" th:text="'Seat ' + ${seatId}" onclick="selectSeat(this)"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div id="seat-map">
+                    <p class="upper-deck-label text-center">Upper Deck</p>
+                    <div class="row seat-row">
+                        <div th:each="seatId: ${#numbers.sequence(1, 10)}"
+                             class="seat"
+                             th:id="'seat-' + ${seatId}"
+                             th:data-seat-id="${seatId}"
+                             th:text="'Seat ' + ${seatId}"
+                             th:unless="${passedSeats.contains(seatId)}"
+                             onclick="selectSeat(this)">
+                        </div>
+                    </div>
+                    <p class="lower-deck-label text-center">Lower Deck</p>
+                    <div class="row seat-row">
+                        <div th:each="seatId: ${#numbers.sequence(11, 20)}"
+                             class="seat"
+                             th:id="'seat-' + ${seatId}"
+                             th:data-seat-id="${seatId}"
+                             th:text="'Seat ' + ${seatId}"
+                             th:unless="${passedSeats.contains(seatId)}"
+                             onclick="selectSeat(this)">
+                        </div>
+                    </div>
+                </div>
+
+
+                <input type="hidden" name="selectedSeats" id="selectedSeats" value="">
+                <input type="hidden" name="totalFare" id="totalFare" value="">
+                <input type="hidden" name="busId" id="busId" value="">
+                <input type="hidden" name="seatCount" id="seatCount" value="">
+
+                <!-- <div class="text-center mb-4">
+                    <p>Total Fare:Rs.<span id="total-fare">0</span></p>
+                </div> -->
+
+                <div class="text-center mb-4">
+                    <p>Total Selected: <span id="selected-count">0</span></p> <!-- Display count of selected seats -->
+                    <p>Selected Seats: <span id="selected-seats"></span></p> <!-- Display selected seats as a list -->
+                    <p>Total Fare: <span id="total-fare">0</span></p>
+
+                </div>
+
+
+                <div class="text-center">
+                    <button type="submit" id="book-btn" class="btn btn-lg btn-success">Book Now</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+
+
+<!-- Footer -->
+<footer class="footer text-center">
+    <div class="container">
+        <span>&copy; Voyage Bus. All rights reserved.</span>
+    </div>
+</footer>
+
+<!-- End of Footer -->
+
+
+
+
+<!-- Include Bootstrap JS and Your Custom Script -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    var params = new URLSearchParams(window.location.search);
+    var fare = params.get('fare');
+    var busId = params.get('busId');
+
+
+    // Set the value of busId and journey date input field
+    $('#busId').val(busId);
+
+
+
+
+
+    function updateSelectedSeats() {
+    var selectedSeats = [];
+    $('.seat.selected').each(function() {
+        var seatId = $(this).data('seat-id');
+        var seatLabel = generateSeatLabel(seatId);
+        selectedSeats.push(seatLabel); // Push seat label instead of ID
+    });
+    $('#selectedSeats').val(selectedSeats.join(','));
+
+    // Update selected seats list
+    $('#selected-seats').text(selectedSeats.join(', '));
+
+    var seatcount = selectedSeats.length;
+    $('#seatCount').val(seatcount); // Update the value of the hidden input field
+
+    // Update count of selected seats
+    $('#selected-count').text(selectedSeats.length);
+
+    // Calculate total fare based on selected seats
+    var totalFare = selectedSeats.length * fare; // Assuming fare per seat is $10
+    $('#total-fare').text(totalFare);
+    $('#totalFare').val(totalFare); // Update hidden input with total fare
+}
+
+function generateSeatLabel(seatId) {
+    return seatId <= 10 ? 'U' + seatId : 'L' + seatId;
+}
+
+
+
+    function selectSeat(seat) {
+        $(seat).toggleClass('selected');
+        updateSelectedSeats();
+    }
+
+
+</script>
+</body>
+</html>

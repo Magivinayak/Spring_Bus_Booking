@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #3e28e3 !important;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: #fff !important;
+        }
+        .footer {
+        background-color: #3e28e3;
+        position:fixed;
+        color: #fff;
+        padding: 20px 0;
+        bottom: 0;
+        width: 100%;
+    }
+    </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Voyage Bus</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/adminLogin}">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/about}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/contact}">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+<br>
+<br>
+
+<div class="container my-2" >
+    <!-- creating table to show list of Buses and with buttons for CURD operations-->
+
+    <h3 style="text-align: center;">List Of Buses</h3>
+    <a th:href="@{/busRegister}" class="btn btn-success btn-sm mb-3" >Add Bus</a>
+    <br>
+    <div class="table-responsive">
+        <table style="width:100%" border="1" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Bus Name</th>
+                <th>From</th>
+                <th>To</th>
+                <th>DepartureDate</th>
+                <th>Type</th>
+                <th>Seats</th>
+                <th>Available Seats</th>
+                <th>Fare</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="bus:${BusList}">
+                <td th:text="${bus.busName}"></td>
+                <td th:text="${bus.routeFrom}"></td>
+                <td th:text="${bus.routeTo}"></td>
+                <td th:text="${bus.departureDate}"></td>
+                <td th:text="${bus.busType}"></td>
+                <td th:text="${bus.seats}"></td>
+                <td th:text="${bus.availableSeats}"></td>
+                <td th:text="${bus.fare}"></td>
+                <td> <a th:href="@{/updateBus/{id}(id=${bus.busId})}" th:method="put"
+                        class="btn btn-primary">Update</a>
+                    <a th:href="@{/deleteBus/{id}(id=${bus.busId})}" th:method="delete"
+                       class="btn btn-danger"
+                       onclick="if (!(confirm('Are you sure you want to delete this Bus?'))) return false">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<br>
+<br>
+
+<!-- Footer -->
+<footer class="footer text-center">
+    <div class="container">
+        <span>&copy; Voyage Bus. All rights reserved.</span>
+    </div>
+</footer>
+
+
+
+<!-- Include Bootstrap JS and any other scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

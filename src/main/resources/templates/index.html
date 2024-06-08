@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Voyage Bus - Online Bus Ticket Booking</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        /* Custom styles */
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #3e28e3 !important;
+        }
+        .navbar-brand, .navbar-nav .nav-link {
+            color: #fff !important;
+        }
+        .jumbotron {
+            background-color: #3e64ff; /* Adjusted background color */
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+        }
+        .feature-icon {
+            font-size: 48px;
+            color: #3e64ff; /* Adjusted feature icon color */
+        }
+        .card {
+            background-color: #f8f9fa; /* Adjusted card background color */
+            border: none;
+            transition: transform 0.3s ease-in-out;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1); /* Added box shadow */
+        }
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        .form-control {
+            border-radius: 25px;
+        }
+        .btn-primary {
+            background-color: #3e64ff; /* Adjusted button color */
+            border: none;
+            border-radius: 25px;
+        }
+        .btn-primary:hover {
+            background-color: #3048e8; /* Darker shade on hover */
+        }
+        .navbar-brand .bus-icon {
+            margin-right: 5px;
+        }
+        .footer {
+            background-color: #3e28e3;
+            color: #fff;
+            padding: 20px 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Voyage Bus</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/adminLogin}">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/about}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/contact}">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Stunning Jumbotron -->
+<div class="jumbotron jumbotron-fluid text-white" style="background-image: url('image2.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <div class="container">
+        <h1 class="display-3 mb-4" style="font-family: 'Montserrat', sans-serif; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Welcome aboard <span style="color: #f90000;">Voyage Bus</span></h1>
+        <p class="lead mb-4">Discover convenient booking, exclusive deals, and 24/7 customer support.</p>
+    </div>
+</div>
+
+
+
+
+
+<div class="container mt-5">
+
+    <!-- Search Form -->
+    <form th:action="@{/search}" method="POST">
+        <div class="form-row">
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="from" name="from" placeholder="From">
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" id="to" name="to" placeholder="To">
+            </div>
+            <div class="col-md-3">
+                <input type="date" class="form-control" id="date" name="date">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary btn-block">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Features Section -->
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card p-4">
+                <i class="feature-icon fas fa-bus-alt mb-3"></i>
+                <h3>Wide Network</h3>
+                <p>3500+ bus operators, lakhs of routes.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <i class="feature-icon fas fa-tags mb-3"></i>
+                <h3>Exclusive Deals</h3>
+                <p>Unlock up to 20% off.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <i class="feature-icon fas fa-headset mb-3"></i>
+                <h3>24/7 Support</h3>
+                <p>Round-the-clock assistance.</p>
+            </div>
+        </div>
+    </div>
+<!--    second row-->
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card p-4">
+                <i class="feature-icon fas fa-couch mb-3"></i>
+                <h3>Comfort Guarantee</h3>
+                <p>Luxurious amenities, spacious seating.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <i class="feature-icon fas fa-leaf mb-3"></i>
+                <h3>Eco-Friendly Travel</h3>
+                <p>Reduce carbon emissions.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <i class="feature-icon fas fa-check-circle mb-3"></i>
+                <h3>Reliable Service</h3>
+                <p>Dependable travel experience.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<!-- Footer -->
+<footer class="footer text-center">
+    <div class="container">
+        <span>&copy; Voyage Bus. All rights reserved.</span>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

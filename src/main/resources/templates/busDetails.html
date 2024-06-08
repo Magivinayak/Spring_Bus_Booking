@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Buses</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        /* Custom styles */
+        body {
+            background-color: #f8f9fa; /* Light gray background */
+        }
+        .navbar {
+            background-color: #3e28e3 !important;
+        }
+        .navbar-brand {
+            color: #fff; /* White text for navbar brand */
+        }
+        .navbar-nav .nav-item .nav-link {
+            color: #fff; /* White text for navbar links */
+        }
+        .footer {
+            background-color: #007bff; /* Blue footer */
+            color: #fff; /* White text for footer */
+            padding: 20px 0;
+        }
+        .bus-card {
+            background-color: #fff; /* White background for bus cards */
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+            margin-bottom: 20px;
+        }
+        .bus-card .card-body {
+            padding: 20px;
+        }
+        .bus-card .card-title {
+            color: #007bff; /* Blue color for bus title */
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .bus-card .card-text {
+            color: #6c757d; /* Gray color for bus details */
+            margin-bottom: 5px;
+        }
+        .bus-card .font-weight-bold {
+            color: #28a745; /* Green color for price */
+            font-size: 18px;
+        }
+        .bus-card .btn-primary {
+            background-color: #007bff; /* Blue button */
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .footer {
+            background-color: #3e28e3;
+            color: #fff;
+            padding: 20px 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Voyage Bus</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/adminLogin}">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/about}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/contact}">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Filter Options and Bus Listings -->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="filter-options">
+                <h4 class="mb-4">Filter Options</h4>
+                <!-- Bus Type Filter -->
+                <div class="form-group">
+                    <label for="busType">Bus Type</label>
+                    <select class="form-control" id="busType">
+                        <option value="">All</option>
+                        <option value="Sleeper">Sleeper</option>
+                        <option value="Seater">Seater</option>
+                    </select>
+                </div>
+                <!-- sort Filter -->
+                <div class="form-group">
+                    <label for="sortBy">Sort By</label>
+                    <select class="form-control" id="sortBy">
+                        <option value="">None</option>
+                        <option value="duration">Duration</option>
+                    </select>
+                </div>
+                <!-- Apply Button -->
+                <button class="btn btn-primary btn-block">Apply</button>
+            </div>
+
+        </div>
+        <!-- Bus Listings -->
+        <div class="col-md-9">
+            <!-- Bus Card Population from Backend -->
+            <div th:if="${#lists.isEmpty(buses)}">
+                <p class="text-danger display-4 text-center">No buses are available  </p>
+            </div>
+            <!-- bus details are provided dynamically from the backend -->
+            <div th:each="bus : ${buses}" class="bus-card" >
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${bus.busName}">Test Travels</h5>
+                    <p class="card-text" th:text="'Route: ' + ${bus.routeFrom} + ' to ' + ${bus.routeTo}">Mumbai to Bengaluru</p>
+                    <p class="card-text" th:text="'Type: ' + ${bus.busType}">Type: Sleeper</p>
+                    <p class="card-text" th:text="'Departure: ' + ${bus.departureTime}">Departure: 08:30 AM</p>
+                    <p class="card-text" th:text="'Duration: ' + ${bus.duration} + ' hrs'">Duration: 12 hrs</p>
+                    <p class="card-text" th:text="'Journey Date: ' + ${bus.departureDate}">Journey Date:00-00-0000</p>
+                    <!-- seats and availableSeats are relevant to display -->
+                    <p class="card-text" th:text="'Available Seats: ' + ${bus.availableSeats} + '/' + ${bus.seats}">Available Seats: 40/45</p>
+                    <p class="card-text">
+                        <span class="text-warning">★★★★☆</span>
+                        (4.0)
+                    </p>
+                    <p class="card-text font-weight-bold" th:text="'Price:' + ${bus.fare}">80</p>
+                    <a href="#" class="btn btn-primary btn-sm" th:href="@{'/seatBooking?fare=' + ${bus.fare}+ '&busId=' + ${bus.busId}}">View Seats</a>
+                </div>
+            </div>
+            <!-- End of Bus Card Population -->
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+
+<!-- Footer -->
+<footer class="footer text-center">
+    <div class="container">
+        <span>&copy; Voyage Bus. All rights reserved.</span>
+    </div>
+</footer>
+
+
+
+<!-- Include Bootstrap JS and any other scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

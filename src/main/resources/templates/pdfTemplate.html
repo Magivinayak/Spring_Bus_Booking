@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Generated PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .pdf-container {
+            border: 1px solid #ccc;
+            background-color: #eaf2f8; /* Changed background color */
+            padding: 0px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Modified box-shadow */
+        }
+        .pdf-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+        .pdf-container p {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        .pdf-container .row {
+            margin-bottom: 20px;
+        }
+        .pdf-container .col-md-6 {
+            width: 50%;
+            float: left;
+        }
+        .pdf-container .col-md-12 {
+            width: 100%;
+            float: left;
+        }
+        .pdf-container .text-center {
+            text-align: center;
+        }
+        .pdf-container button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .pdf-container button:hover {
+            background-color: #0056b3;
+        }
+        .pdf-container .button-container {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+        }
+        .pdf-container .button-container button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="pdf-container">
+        <h2>Passenger Details</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Start Location:</strong> <span th:text="${passengerEntity.startLocation}"></span></p>
+                <p><strong>End Location:</strong> <span th:text="${passengerEntity.endLocation}"></span></p>
+                <p><strong>Bus Name:</strong> <span th:text="${passengerEntity.busName}"></span></p>
+                <p><strong>Journey Date:</strong> <span th:text="${passengerEntity.journeyDate}"></span></p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Passenger Name:</strong> <span th:text="${passengerEntity.name}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${passengerEntity.email}"></span></p>
+                <p><strong>Gender:</strong> <span th:text="${passengerEntity.gender}"></span></p>
+                <p><strong>Age:</strong> <span th:text="${passengerEntity.age}"></span></p>
+                <p><strong>Mobile:</strong> <span th:text="${passengerEntity.mobile}"></span></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p><strong>Selected Seat:</strong> <span th:text="${passengerEntity.selectedSeat}"></span></p>
+                <p><strong>Total Fare:</strong> <span th:text="${passengerEntity.totalFare}"></span></p>
+            </div>
+        </div>
+        <div class="button-container">
+            <button onclick="generatePdf()">Ticket Download</button>
+            <button onclick="navigateToHome()">Go to Home</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generatePdf() {
+        // Make a POST request to the '/generatePdf' endpoint
+        fetch('/generatePdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({}) // You can pass any data if required
+        })
+        .then(response => {
+            // Handle the response accordingly
+            if (response.ok) {
+                // PDF generated successfully, handle the success
+                window.location.href = '/downloadPdf';
+            } else {
+                // PDF generation failed, handle the error
+                alert('PDF generation failed!');
+            }
+        })
+        .catch(error => {
+            // Handle any network or server errors
+            console.error('Error generating PDF:', error);
+            alert('An error occurred while generating PDF!');
+        });
+    }
+
+    function navigateToHome() {
+        window.location.href = '/';
+    }
+
+</script>
+</body>
+</html>
